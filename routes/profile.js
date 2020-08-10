@@ -27,7 +27,7 @@ router.post("/SearchCabs/:id", function(req, res){
     }
   }]).then((function(cabs) {
 		console.log(cabs);
-		request("https://maps.googleapis.com/maps/api/geocode/json?address="+req.body.destination+",+CA&key=AIzaSyD8FPgNk-KSagr5u62ql0ZcTqLpGZUoX_0", function(error, response, body){
+		request("https://maps.googleapis.com/maps/api/geocode/json?address="+req.body.destination+",+CA&key=keys.googleKey", function(error, response, body){
 			if(error){console.log(error);}
 			if(!error && response.statusCode == 200){
 				var dest = JSON.parse(body);
@@ -35,7 +35,7 @@ router.post("/SearchCabs/:id", function(req, res){
 				obj.push(req.body.lat);
 				obj.push(req.body.long);
 				
-				var url="https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+obj[0]+","+obj[1]+"&destinations="+JSON.stringify(dest.results[0].geometry.location.lat)+","+JSON.stringify(dest.results[0].geometry.location.lng)+"&key=AIzaSyD8FPgNk-KSagr5u62ql0ZcTqLpGZUoX_0"
+				var url="https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+obj[0]+","+obj[1]+"&destinations="+JSON.stringify(dest.results[0].geometry.location.lat)+","+JSON.stringify(dest.results[0].geometry.location.lng)+"&key=keys.googleKey"
 				
 				customer.updateOne({_id: req.params.id},{$set: {coordinates: obj}}, function(err,done){
 					if(err){console.log(err)} else {	request(url, function(error, response, body){
@@ -89,7 +89,7 @@ router.post("/confirm/:customerid", function(req, res){
 						
 						if(err){console.log(err);} else {
 							var ride_dat = data;
-							var url="https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+JSON.stringify(customer.coordinates[0])+","+JSON.stringify(customer.coordinates[1])+"&destinations="+JSON.stringify(cab.geometry.coordinates[0])+","+JSON.stringify(cab.geometry.coordinates[1])+"&key=AIzaSyD8FPgNk-KSagr5u62ql0ZcTqLpGZUoX_0";
+							var url="https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+JSON.stringify(customer.coordinates[0])+","+JSON.stringify(customer.coordinates[1])+"&destinations="+JSON.stringify(cab.geometry.coordinates[0])+","+JSON.stringify(cab.geometry.coordinates[1])+"&key=keys.googleKey";
 							request(url,function(error, response, data){
 								if(!error && response.statusCode == 200){
 									var data = JSON.parse(data);
