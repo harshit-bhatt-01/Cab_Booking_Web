@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+      .nav {
+        display: flex;
+        width: 100vw;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .nav {
+        padding: 30px 0;
+      }
+      .logo {
+        margin-left: 60px;
+        height: 80px;
+      }
+      .logo img {
+        height: 100%;
+        border-radius: 50%;
+      }
+      .user {
+        margin-right: 60px;
+        color: white;
+      }
+      body {
+        background-image: url("https://singularityhub.com/wp-content/uploads/2018/06/autonomous-vehicles-cars-blurred-hong-kong-city-street-view-night-558632776.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+      .main {
+        display: flex;
+      }
+      .card {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: white;
+        padding: 20px;
+        border-radius: 20px;
+      }
+      .success-img {
+        height: 150px;
+      }
+      .success-img img {
+        height: 100%;
+      }
+      td {
+        padding: 20px;
+      }
+      button {
+        width: 100%;
+        outline: none;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: red;
+        color: white;
+        border: none;
+      }
+      .bold {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav">
+      <div class="logo">
+        <img
+          src="https://play-lh.googleusercontent.com/y2w2QDagpoKkcMnaudzJ6VxmS9dDKovq1DDjONhtcqmDiPcnhWIKEAsEuV8BiaFoOeI"
+        />
+      </div>
+      <div class="user"><h3></h3></div>
+    </div>
+    <div class="main">
+      <div class="card">
+        <div class="success-img">
+          <img src="https://icon-library.com/images/tick-icon-png/tick-icon-png-14.jpg" alt="" />
+        </div>
+        <div class="text"><h3>Booking Successful</h3></div>
+        <div class="details">
+          <table>
+            <tr>
+              <td class="bold">Driver Name</td>
+              <td><%= cab.name %></td>
+            </tr>
+            <tr>
+              <td class="bold">Cab Name</td>
+              <td><%= cab.cabName %></td>
+            </tr>
+            <tr>
+              <td class="bold">ETA</td>
+              <td><%= duration %> min</td>
+            </tr>
+          </table>
+          <form action="/profile/cancel/<%= ride %>" method="GET">
+              <button type="submit">Ride completed</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

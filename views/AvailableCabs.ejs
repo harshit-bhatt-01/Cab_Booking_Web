@@ -1,0 +1,150 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+      .nav {
+        display: flex;
+        width: 100vw;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .nav {
+        padding: 30px 0;
+      }
+      .logo {
+        margin-left: 60px;
+        height: 80px;
+      }
+      .logo img {
+        height: 100%;
+        border-radius: 50%;
+      }
+      .user {
+        margin-right: 60px;
+        color: white;
+      }
+      body {
+        background-image: url("https://singularityhub.com/wp-content/uploads/2018/06/autonomous-vehicles-cars-blurred-hong-kong-city-street-view-night-558632776.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+      .main {
+        display: flex;
+      }
+      .card {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: white;
+        padding: 20px;
+        border-radius: 20px;
+      }
+      .success-img {
+        height: 150px;
+      }
+      .success-img img {
+        height: 100%;
+      }
+      td {
+        padding: 10px;
+      }
+      button {
+        width: 100%;
+        outline: none;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: red;
+        color: white;
+        border: none;
+      }
+
+      .avl {
+        color: white;
+        margin: 0 auto;
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .bold {
+        font-weight: bold;
+      }
+      .cabs {
+        display: flex;
+        justify-content: space-evenly;
+      }
+      .cab {
+        color: white;
+        background-color: lightgray;
+        border-radius: 20px;
+        padding: 10px;
+      }
+      form {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+      input[type="submit"] {
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: green;
+        outline: none;
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav">
+      <div class="logo">
+        <img
+          src="https://play-lh.googleusercontent.com/y2w2QDagpoKkcMnaudzJ6VxmS9dDKovq1DDjONhtcqmDiPcnhWIKEAsEuV8BiaFoOeI"
+        />
+      </div>
+      <div class="user"><h3></h3></div>
+    </div>
+    <h3 class="avl">Available Cabs</h3>
+    <div class="cabs">
+        <% cabs.forEach(function(cab){ %>
+            <% if(cab.available){ %>
+            <div class="cab">
+                <table>
+                    <tr>
+                      <td class="key">Driver</td>
+                      <td class="value"><%= cab.name %></td>
+                    </tr>
+                    <tr>
+                      <td class="key">Taxi</td>
+                      <td class="value"><%= cab.cabName %></td>
+                    </tr>
+                    <tr>
+                      <td class="key">Taxi Number</td>
+                      <td class="value"><%= cab.cabNumber %></td>
+                    </tr>
+                    <tr>
+                      <td class="key">Contact</td>
+                      <td class="value"><%= cab.contact %></td>
+                    </tr>
+                    <tr>
+                      <td class="key">Distance</td>
+                      <td class="value"><%= distance %> km</td>
+                    </tr>
+                    <tr>
+                      <td class="key">Arrival Time</td>
+                      <td class="value"><%= time %> mins</td>
+                    </tr>
+                  </table>
+                <form method="POST" action="/profile/confirm/<%= cab._id %>/customer/<%= customer %>">
+                <input type="submit" class="bookTaxi" style="z-index: 99999" />
+                </form>
+            </div>
+      <% } %>
+      <% }) %>
+    </div>
+  </body>
+</html>

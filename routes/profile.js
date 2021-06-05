@@ -4,6 +4,8 @@ var cab = require("../models/cab");
 var Ride = require("../models/ride");
 var request = require("request");
 
+require('dotenv').config()
+
 var price;
 router.get("/register", function(req, res){
 	res.render("register");
@@ -27,18 +29,19 @@ router.post("/SearchCabs/:id", function(req, res){
     }
   }]).then((function(cabs) {
 		console.log(cabs);
-		request("https://maps.googleapis.com/maps/api/geocode/json?address="+req.body.destination+",+CA&key=keys.googleKey", function(error, response, body){
+		
+		request("https://maps.googleapis.com/maps/api/geocode/json?address="+req.body.destination+",+CA&key="+process.env.GOOGLE_API_KEY, function(error, response, body){
 			if(error){console.log(error);}
 			if(!error && response.statusCode == 200){
 				var dest = JSON.parse(body);
 				var obj = [];
 				obj.push(req.body.lat);
 				obj.push(req.body.long);
-				
-				var url="https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+obj[0]+","+obj[1]+"&destinations="+JSON.stringify(dest.results[0].geometry.location.lat)+","+JSON.stringify(dest.results[0].geometry.location.lng)+"&key=keys.googleKey"
+				console.log(dest)
+				var url="https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+obj[0]+","+obj[1]+"&destinations="+JSON.stringify(dest.results[0].geometry.location.lat)+","+JSON.stringify(dest.results[0].geometry.location.lng)+"&key="+process.env.GOOGLE_API_KEY
 				
 				customer.updateOne({_id: req.params.id},{$set: {coordinates: obj}}, function(err,done){
-					if(err){console.log(err)} else {	request(url, function(error, response, body){
+					if(err){console.log(err)} else {request(url, function(error, response, body){
 					
 					if(error){
 						console.log(error);
@@ -71,14 +74,15 @@ router.post("/SearchCabs/:id", function(req, res){
 	})
 })
 
-router.post("/confirm/:customerid", function(req, res){
+router.post("/confirm/:cabs/customer/:customerid", function(req, res){
 	customer.findById(req.params.customerid, function(err, cust){
 		if(err){console.log(err);} else {
 			var customer = cust;
-			cab.findById(req.body.cab, function(err, cab){
+			cab.findById(req.params.cabs, function(err, cab){
 				if(err){console.log(err);} else {
 					var cab = cab;
-					cab["available"] = false;
+					cab.available = false;
+					// to do integration staging environment devops 
 					cab.save();
 					var ride = new Ride({
 						customer: customer,
@@ -89,7 +93,7 @@ router.post("/confirm/:customerid", function(req, res){
 						
 						if(err){console.log(err);} else {
 							var ride_dat = data;
-							var url="https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+JSON.stringify(customer.coordinates[0])+","+JSON.stringify(customer.coordinates[1])+"&destinations="+JSON.stringify(cab.geometry.coordinates[0])+","+JSON.stringify(cab.geometry.coordinates[1])+"&key=keys.googleKey";
+							var url="https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+JSON.stringify(customer.coordinates[0])+","+JSON.stringify(customer.coordinates[1])+"&destinations="+JSON.stringify(cab.geometry.coordinates[0])+","+JSON.stringify(cab.geometry.coordinates[1])+"&key="+process.env.GOOGLE_API_KEY;
 							request(url,function(error, response, data){
 								if(!error && response.statusCode == 200){
 									var data = JSON.parse(data);

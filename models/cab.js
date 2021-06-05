@@ -17,6 +17,7 @@ var cabSchema = new mongoose.Schema({
 	cabName: String,
 	cabNumber: String,
 	contact: Number,
+	image: String,
 	available:{
 		type: Boolean,
 		default: false

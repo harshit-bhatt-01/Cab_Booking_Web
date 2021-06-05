@@ -3,7 +3,6 @@ var app = express();
 var bodyparser = require("body-parser");
 var passport = require("passport");
 var googleStrategy = require("passport-google-oauth20");
-var keys = require("./keys");
 var mongoose = require("mongoose");
 
 var authRoutes = require("./routes/auth");
@@ -17,6 +16,7 @@ app.use(bodyparser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname+"/public"));
 
+require('dotenv').config()
 
 app.use(require("express-session")({
     secret: "VIT",
@@ -29,8 +29,8 @@ app.use(passport.session());
 passport.use(
 	new googleStrategy({
 			callbackURL: '/auth/google/redirect',
-			clientID: keys.google.clientID,
-			clientSecret: keys.google.clientSecret
+			clientID: process.env.CLIENT_ID,
+			clientSecret: process.env.CLIENT_SECRET
 		}, function(accessToken, refreshToken, profile, done){
 		// check if user already exist
 			customer.findOne({googleid: profile.id}, function(err, data){
@@ -54,7 +54,8 @@ passport.use(
 	})
 );
 
-mongoose.connect("mongodb://localhost:27017/cabbooking",{useNewUrlParser: true});
+mongoose.connect("mongodb://localhost:27017/cabbooking", {useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect("mongodb+srv://parth_pandey1:"+process.env.DB_PASSWORD+"@cluster0.eqqen.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 
 passport.serializeUser(function(id, done){
 	customer.findById(id).then(function(user){
@@ -74,12 +75,12 @@ passport.deserializeUser(function(id, done){
 });
 
 // var cab1 = new cab({
-// 	name: "Aamir S",
-// 	cabName: "Maruti Suzuki Swift",
-// 	cabNumber: "TN23 S 2241",
-// 	contact: 980084711,
+// 	name: "Rajesh",
+// 	cabName: "Maruti Suzuki WagonR",
+// 	cabNumber: "UP32 AS 2241",
+// 	contact: 9800847111,
 // 	available: true,
-// 	geometry: {"type": "point", "coordinates": [18.9333,81.1344]}
+// 	geometry: {"type": "point", "coordinates": [26.9210,80.9512]}
 // })
 // cab1.save(function(err, res){
 // 	if(err){console.log(err)} else {
@@ -88,15 +89,13 @@ passport.deserializeUser(function(id, done){
 // })
 
 app.get("/",function(req, res){
-	res.render("home",{customer: "nill"});
+	res.render("home");
 })
-app.get("/map",function(req,res){
-	res.render("map");
-})
+
 app.get("/:id",function(req,res){
 	customer.findById(req.params.id, function(err, data){
 		if(err){console.log(err);} else {
-			res.render("home",{customer: data, id:req.params.id});
+			res.render("dashboard",{customer: data, id:req.params.id});
 		}
 	})
 });
